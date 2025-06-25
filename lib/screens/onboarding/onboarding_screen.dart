@@ -12,6 +12,35 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
+  int _currentPage = 0;
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentPage = index;
+    });
+  }
+
+  void _goToNextPage() {
+    if (_currentPage < onboardingPages.length - 1) {
+      _controller.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _goToPreviousPage() {
+    if (_currentPage > 0) {
+      _controller.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _skip() {
+    _controller.jumpToPage(onboardingPages.length - 1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +52,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           PageView.builder(
             controller: _controller,
+            onPageChanged: _onPageChanged,
             itemCount: onboardingPages.length,
             itemBuilder: (_, index) {
               final page = onboardingPages[index];
@@ -79,17 +109,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               );
             },
           ),
-          Positioned(
-            top: insets.top,
-            right: 20,
-            child: GlassButton(
-              label: 'Skip',
-              borderRadius: 7,
-              onTap: () {
-                print('Skip tapped');
-              },
+
+          if (_currentPage < onboardingPages.length - 1)
+            Positioned(
+              top: insets.top,
+              right: 20,
+              child: GlassButton(label: 'Skip', borderRadius: 7, onTap: _skip),
             ),
-          ),
 
           Positioned(
             bottom: insets.bottom,
@@ -98,12 +124,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // if (_currentPage > 0)
-                IconButton(
-                  // onPressed: _goToPreviousPage,
-                  onPressed: () {},
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                ),
+                if (_currentPage > 0)
+                  IconButton(
+                    onPressed: _goToPreviousPage,
+                    // onPressed: () {},
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  )
+                else
+                  SizedBox(width: 48),
 
                 SmoothPageIndicator(
                   controller: _controller,
@@ -125,11 +153,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
 
-                IconButton(
-                  // onPressed: _goToNextPage,
-                  onPressed: () {},
-                  icon: const Icon(Icons.arrow_forward, color: Colors.white),
-                ),
+                _currentPage == onboardingPages.length - 1
+                    ? Positioned(
+                        bottom: insets.bottom,
+                        right: 20,
+                        child: TextButton(
+                          onPressed: () {
+                            // Handle "Get Started" action here
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text(
+                            'Get Started',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      )
+                    : IconButton(
+                        onPressed: _goToNextPage,
+                        icon: const Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                        ),
+                      ),
               ],
             ),
           ),
