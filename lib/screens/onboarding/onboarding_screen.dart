@@ -133,43 +133,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 else
                   SizedBox(width: 48),
 
-                SmoothPageIndicator(
-                  controller: _controller,
-                  count: onboardingPages.length,
-                  effect: CustomizableEffect(
-                    activeDotDecoration: DotDecoration(
-                      width: 26, // 👈 Wider active dot
-                      height: 8,
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    dotDecoration: DotDecoration(
-                      width: 10, // 👈 Smaller inactive dots
-                      height: 10,
-                      color: const Color.fromARGB(142, 255, 255, 255),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    spacing: 8.0,
-                  ),
-                ),
-
                 _currentPage == onboardingPages.length - 1
-                    ? Positioned(
-                        bottom: insets.bottom,
-                        right: 20,
-                        child: TextButton(
-                          onPressed: () {
-                            // Handle "Get Started" action here
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text(
-                            'Get Started',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    ? TextButton(
+                        onPressed: () {
+                          // Handle "Get Started" action here
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text(
+                          'Get Started',
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       )
@@ -181,6 +158,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                       ),
               ],
+            ),
+          ),
+
+          Positioned(
+            bottom: insets.bottom + 18,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: SmoothPageIndicator(
+                controller: _controller,
+                count: onboardingPages.length,
+                effect: CustomizableEffect(
+                  activeDotDecoration: DotDecoration(
+                    width: 26, // 👈 Wider active dot
+                    height: 8,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  dotDecoration: DotDecoration(
+                    width: 10, // 👈 Smaller inactive dots
+                    height: 10,
+                    color: const Color.fromARGB(142, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  spacing: 8.0,
+                ),
+              ),
             ),
           ),
         ],
